@@ -1,0 +1,4 @@
+OpenDyslexic by Abbie Gonzalez
+https://github.com/antijingoist/opendyslexic
+Commit: 1824da5c0e41dc3e13ffc7f3a636dcaf695d61b7
+License: SIL Open Font License 1.1 (OFL.txt)

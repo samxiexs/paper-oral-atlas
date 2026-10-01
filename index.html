@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f5f0">
+  <title>CVPR Oral Atlas · 2024–2026</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="data.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="app-header">
+    <a class="brand" href="#" id="home"><span class="brand-mark" aria-hidden="true">oa<span>↗</span></span><span><b>Oral Atlas</b><small>CVPR · 2024—2026</small></span></a>
+    <nav class="main-nav" aria-label="探索视图">
+      <button class="active" data-view="map" aria-current="page">论文地图</button>
+      <button data-view="evolution">逐年变化</button>
+      <button data-view="matrix">问题 × 方法</button>
+      <button data-view="routes">阅读脉络</button>
+      <button data-view="desk">我的阅读 <span id="saved-count">0</span></button>
+    </nav>
+    <button class="quiet-button" id="about">数据说明 ↗</button>
+  </header>
+  <div class="workspace">
+    <aside class="filters" aria-label="论文筛选">
+      <div class="filter-heading"><span class="eyebrow">THE COLLECTION</span><button id="reset" class="text-button">重置</button></div>
+      <div class="collection-number"><strong id="filter-count">326</strong><span>篇 oral <small>/ 326</small></span></div>
+      <label class="search-label" for="search">检索论文</label>
+      <div class="search-box"><span aria-hidden="true">⌕</span><input type="search" id="search" placeholder="标题、中文题意、摘要…" autocomplete="off"><kbd>/</kbd></div>
+      <fieldset class="years"><legend>年份</legend>
+        <label><input type="checkbox" value="2024" checked><span>2024</span><small>90</small></label>
+        <label><input type="checkbox" value="2025" checked><span>2025</span><small>95</small></label>
+        <label><input type="checkbox" value="2026" checked><span>2026</span><small>141</small></label>
+      </fieldset>
+      <button id="mobile-filters" class="mobile-filters" aria-expanded="false">更多筛选 ↓</button>
+      <div class="filter-label">主题领域</div><div id="group-filters" class="group-filters"></div>
+      <label class="filter-label" for="topic-filter">细分主题</label><select id="topic-filter"><option value="">全部 10 个主题</option></select>
+      <label class="filter-label" for="task-filter">任务线索</label><select id="task-filter"><option value="">全部任务</option></select>
+      <label class="filter-label" for="method-filter">方法线索</label><select id="method-filter"><option value="">全部方法</option></select>
+      <label class="check-row"><input id="noted-only" type="checkbox"><span>有中文阅读提示 <small>38 篇</small></span></label>
+      <div class="sidebar-bottom"><p>一个点，一篇工作。<br>从问题出发，沿联系阅读。</p><a href="CVPR_2024-2026_All_Oral_APA.txt" download>下载全部 APA 引用 ↓</a></div>
+    </aside>
+
+    <main id="main">
+      <div class="view-heading"><div><span class="eyebrow" id="view-kicker">EXPLORE THE LANDSCAPE</span><h1 id="view-title">三年的工作，放在同一张地图上。</h1></div><div class="heading-actions"><button id="compare-open" class="button">并排阅读 <span id="compare-count">0 / 3</span></button></div></div>
+      <div id="active-filters" class="active-filters" aria-live="polite"></div>
+      <section id="map-view" class="view active" aria-label="交互论文地图">
+        <div class="map-toolbar">
+          <div class="segmented"><button id="graph-mode" class="selected" aria-pressed="true">地图</button><button id="list-mode" aria-pressed="false">列表</button></div>
+          <label>连线 <select id="relation-type"><option value="citation">参考文献引用</option><option value="semantic">摘要相似</option><option value="method">共同方法线索</option><option value="task">共同任务线索</option><option value="contrast">人工阅读对照</option><option value="mention">摘要明确提及</option></select></label>
+          <label>布局 <select id="layout"><option value="topic">按主题</option><option value="year">按年份</option><option value="focus" disabled>所选关系</option></select></label>
+          <label class="check-inline"><input type="checkbox" id="ego">只看所选近邻</label>
+        </div>
+        <div id="graph-wrap" class="graph-wrap">
+          <svg id="graph" role="group" aria-label="CVPR oral 论文关系地图。可点击节点查看论文；也可切换列表进行键盘阅读。"></svg>
+          <div id="graph-tooltip" role="tooltip" hidden></div>
+          <div class="graph-controls"><button id="zoom-in" aria-label="放大地图">＋</button><button id="zoom-out" aria-label="缩小地图">−</button><button id="fit" aria-label="复位地图">复位</button></div>
+          <div class="graph-hint">点击读论文 · 滚轮缩放 · 拖动空白平移</div>
+          <div id="graph-empty" class="empty-state" hidden><b>没有符合筛选的论文</b><p>试试清除关键词或放宽年份、主题条件。</p><button class="button" data-reset>清除筛选</button></div>
+        </div>
+        <div id="paper-list" class="paper-list" hidden></div>
+        <footer class="graph-footer"><div class="year-key"><span>○ 2024</span><span>□ 2025</span><span>△ 2026</span></div><span id="graph-status" aria-live="polite"></span></footer>
+        <div class="map-caption"><b>连线是阅读入口。</b> 引用箭头指向引用者；相似与人工对照均不表示继承。选择论文后，右侧会解释联系。</div>
+      </section>
+      <section id="evolution-view" class="view" hidden></section>
+      <section id="matrix-view" class="view" hidden></section>
+      <section id="routes-view" class="view" hidden></section>
+      <section id="desk-view" class="view" hidden></section>
+    </main>
+
+    <aside id="detail" class="detail" aria-label="论文详情"><div id="detail-content"></div></aside>
+  </div>
+  <dialog id="about-dialog"><div class="dialog-header"><span class="eyebrow">HOW TO READ THIS ATLAS</span><button data-close="about-dialog" aria-label="关闭数据说明">关闭 ×</button></div><h2>知道连线从哪里来。</h2><div id="about-content"></div></dialog>
+  <dialog id="compare-dialog"><div class="dialog-header"><div><span class="eyebrow">READ SIDE BY SIDE</span><h2>把问题与机制放在一起。</h2></div><button data-close="compare-dialog" aria-label="关闭并排阅读">关闭 ×</button></div><div id="compare-content"></div></dialog>
+  <dialog id="export-dialog"><div class="dialog-header"><div><span class="eyebrow">TAKE YOUR NOTES WITH YOU</span><h2>导出阅读记录</h2></div><button data-close="export-dialog" aria-label="关闭导出预览">关闭 ×</button></div><p class="view-description">先核对内容，再下载文件。也可以复制文本，在两个人的浏览器之间迁移。</p><textarea id="export-text" readonly aria-label="导出内容预览"></textarea><div class="export-actions"><a class="button primary" id="export-download">下载文件 ↓</a><button class="button" id="export-copy">复制全部内容</button><span id="export-filename"></span></div></dialog>
+  <div id="toast" role="status" aria-live="polite" hidden></div>
+  <noscript>请启用 JavaScript 查看交互地图。可下载本站 APA 引用与地图数据。</noscript>
+</body>
+</html>
